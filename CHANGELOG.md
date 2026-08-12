@@ -16,6 +16,11 @@ All notable changes to this project are documented here. This project adheres to
   the built distribution with `twine check`.
 - `py.typed` marker so downstream users get the package's type hints.
 
+### Fixed
+- The `mcp` optional dependency now carries a `python_version >= "3.10"` marker
+  (mcp requires 3.10+). The core library and CLI keep working on Python 3.9;
+  installing `[dev]`/`[mcp]` no longer fails to resolve there.
+
 ## [0.1.0]
 
 ### Added
