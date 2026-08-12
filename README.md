@@ -1,5 +1,7 @@
 # sledge — hand an agent Isabelle's hammer
 
+[![CI](https://github.com/MeghanBao/sledge/actions/workflows/ci.yml/badge.svg)](https://github.com/MeghanBao/sledge/actions/workflows/ci.yml)
+
 **English** · [中文](README.zh.md) · [Deutsch](README.de.md)
 
 `sledge` gives an AI agent (or you) an *independent* way to settle a formal

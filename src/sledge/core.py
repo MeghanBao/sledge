@@ -35,12 +35,37 @@ _NO_ISABELLE = (
 )
 
 
+class StatementError(ValueError):
+    """The proposition string can't be placed into a `lemma "..."`."""
+
+
+def validate_statement(statement: str) -> str:
+    """Normalise a proposition and reject ones that would break theory syntax.
+
+    Strips one matched pair of outer double quotes (a common paste mistake) and
+    rejects any statement that still contains a ``"`` — that would terminate the
+    generated ``lemma "..."`` early. Unicode (⟹, ∀, ⋀, …) is kept as-is.
+    """
+    s = statement.strip()
+    if not s:
+        raise StatementError("empty statement")
+    if len(s) >= 2 and s[0] == '"' and s[-1] == '"':
+        s = s[1:-1].strip()
+    if '"' in s:
+        raise StatementError(
+            'statement contains a double quote (") which would break the '
+            'generated `lemma "..."`; remove it'
+        )
+    return s
+
+
 # --------------------------------------------------------------------------- #
 # pure: theory generation
 # --------------------------------------------------------------------------- #
 def build_theory(statement: str, imports: Sequence[str], proof: str,
                  name: str = "Scratch") -> str:
     """Wrap a proposition and a proof/command into a self-contained theory."""
+    statement = validate_statement(statement)
     imports_str = " ".join(imports) if imports else "Main"
     return (
         f"theory {name}\n"
@@ -109,6 +134,10 @@ def prove(
     runner = runner or IsabelleRunner()
     if not runner.available():
         return Result.unknown(_NO_ISABELLE, statement=statement)
+    try:
+        statement = validate_statement(statement)
+    except StatementError as exc:
+        return Result.unknown(f"invalid statement: {exc}", statement=statement)
 
     tried: List[str] = []
 
@@ -157,6 +186,10 @@ def refute(
     runner = runner or IsabelleRunner()
     if not runner.available():
         return Result.unknown(_NO_ISABELLE, statement=statement)
+    try:
+        statement = validate_statement(statement)
+    except StatementError as exc:
+        return Result.unknown(f"invalid statement: {exc}", statement=statement)
     ce = _find_counterexample(statement, imports, timeout, runner)
     if ce:
         return Result.refuted(

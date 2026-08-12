@@ -34,3 +34,6 @@ Repository = "https://github.com/MeghanBao/sledge"
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+sledge = ["py.typed"]

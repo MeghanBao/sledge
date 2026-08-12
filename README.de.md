@@ -1,5 +1,7 @@
 # sledge — gib einem Agenten Isabelles Hammer
 
+[![CI](https://github.com/MeghanBao/sledge/actions/workflows/ci.yml/badge.svg)](https://github.com/MeghanBao/sledge/actions/workflows/ci.yml)
+
 [English](README.md) · [中文](README.zh.md) · **Deutsch**
 
 `sledge` gibt einem KI-Agenten (oder dir) einen *unabhängigen* Weg, eine formale

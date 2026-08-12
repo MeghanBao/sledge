@@ -5,17 +5,21 @@ only on a real counterexample, UNKNOWN for everything else (including "Isabelle
 not installed").
 """
 
+import pytest
+
 from sledge import (
     REFUTED,
     UNKNOWN,
     VERIFIED,
     RunResult,
+    StatementError,
     build_theory,
     check_theory,
     parse_counterexample,
     parse_sledgehammer,
     prove,
     refute,
+    validate_statement,
 )
 
 
@@ -56,6 +60,28 @@ def test_build_theory_shape():
     assert 'lemma "(a::nat) + b = b + a"' in thy
     assert "by simp" in thy
     assert thy.strip().endswith("end")
+
+
+# --------------------------------------------------------------------------- #
+# statement validation / escaping
+# --------------------------------------------------------------------------- #
+def test_validate_strips_outer_quotes():
+    assert validate_statement('"(a::nat) + b = b + a"') == "(a::nat) + b = b + a"
+
+
+def test_validate_keeps_unicode():
+    assert validate_statement("∀x. x = x") == "∀x. x = x"
+
+
+def test_validate_rejects_inner_quote():
+    with pytest.raises(StatementError):
+        validate_statement('foo = ''"''s bar')   # contains a stray double quote
+
+
+def test_prove_invalid_statement_is_unknown_not_crash():
+    r = prove('a = "x"', runner=FakeRunner(ok_proofs=["by simp"]))
+    assert r.status == UNKNOWN
+    assert "invalid statement" in r.reason
 
 
 # --------------------------------------------------------------------------- #

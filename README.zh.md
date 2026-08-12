@@ -1,5 +1,7 @@
 # sledge —— 把 Isabelle 的锤子递给 agent
 
+[![CI](https://github.com/MeghanBao/sledge/actions/workflows/ci.yml/badge.svg)](https://github.com/MeghanBao/sledge/actions/workflows/ci.yml)
+
 [English](README.md) · **中文** · [Deutsch](README.de.md)
 
 `sledge` 让 AI agent（或你自己）用 [Isabelle](https://isabelle.in.tum.de/) 证明助手及其 **Sledgehammer** 自动化，去**独立**判定一条形式化数学命题。你给它一条命题，它只回答三种之一：
